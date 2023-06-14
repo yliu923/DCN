@@ -38,18 +38,18 @@ TypeId SwitchMmu::GetTypeId(void) {
 /*
 We model the switch shared memory (purely based on our understanding and experience).
 The switch has an on-chip buffer which has `bufferPool` size.
-This buffer is shared across all port and queues in the switch.
+This buffer is shared across all ports and queues in the switch.
 
 `bufferPool` is further split into multiple pools at the ingress and egress.
 
-It would be easier to understand from here on if you consider Ingress/Egress are merely just counters.
+It would be easier to understand from here on if you consider Ingress/Egress merely just counters.
 These are not separate buffer locations or chips...!
 
 First, `ingressPool` (size) accounts for ingress buffering shared by both lossy and lossless traffic.
 Additionally, there exists a headroom pool of size xoffTotal,
 and each queue may use xoff[port][q] configurable amount at each port p and queue q.
-When a queue at the ingress exceeds its ingress threshold, a PFC pause message is sent and
-any incoming packets can use upto a maximum of xoff[port][q] headroom.
+When a queue at the ingress exceeds its ingress threshold, a PFC pause message is sent, and
+any incoming packets can use up to a maximum of xoff[port][q] headroom.
 
 Second, at the egress, `egressPool[LOSSY]` (size) accounts for buffering lossy traffic at the egress and
 similarly `egressPool[LOSSLESS]` for lossless traffic.
@@ -58,7 +58,7 @@ similarly `egressPool[LOSSLESS]` for lossless traffic.
 
 SwitchMmu::SwitchMmu(void) {
 
-	// Here we just initialize some default values.
+	// Here, we just initialize some default values.
 	// The buffer can be configured using Set functions through the simulation file later.
 
 	// Buffer pools
@@ -76,7 +76,7 @@ SwitchMmu::SwitchMmu(void) {
 
 	// aggregate run time
 	// `totalUsed` IMPORTANT TO NOTE: THIS IS NOT bytes in the "ingress pool".
-	// This is the total bytes USED in the switch buffer, which includes occupied buffer in reserved + headroom + ingresspool.
+	// This is the total bytes USED in the switch buffer, which includes an occupied buffer in reserved + headroom + ingresspool.
 	totalUsed = 0;
 	egressPoolUsed[LOSSLESS] = 0; // Total bytes USED in the egress lossless pool
 	egressPoolUsed[LOSSY] = 0; // Total bytes USED in the egress lossy pool
